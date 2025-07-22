@@ -1,33 +1,26 @@
 from django.core.management.base import BaseCommand
-from catalog.models import Category, Product
+from catalog.models import Product, Category
+
 
 class Command(BaseCommand):
-    help = 'Add products to the database'
+    help = 'заполнения базы-данных о продуктах'
 
-    def handle(self, *args, **options):
-        category, _ = Category.objects.get_or_create(name='Самолеты', description='пассажирские самолеты')
+    def handle(self, *args, **kwargs):
+        # Удаляем существующие записи
+        Product.objects.all().delete()
+
+        сategory, _ = Category.objects.get_or_create(name='Фрукты')
 
         products = [
-            {"name": "Airbus A380",
-            "description": "широкофюзеляжный двухпалубный четырёхдвигательный турбореактивный пассажирский самолёт, "
-                           "созданный концерном Airbus S.A.S.. ",
-            "image": "",
-            "category": category,
-            "price": 105000,
-            "created_at": "2025-03-13",
-            "updated_at": "2025-03-13"},
-            {"name": "Boeing 777",
-             "description": "самый крупный в мире двухмоторный турбовентиляторный пассажирский самолёт.",
-             "image": "",
-             "category": category,
-             "price": 100000,
-             "created_at": "2025-03-13",
-             "updated_at": "2025-03-13"}
+            {'name': 'апельсин',"description": "оранжевый", 'сategory': сategory},
+            {"name": "яблоко", "description": "зеленое", 'сategory': сategory}
         ]
 
-        for product_data in products:
-            product, created = Product.objects.get_or_create(**product_data)
+        for prod in products:
+            product, created = Product.objects.get_or_create(**prod)
             if created:
-                self.stdout.write(self.style.SUCCESS(f'Successfully added product: {product.name}'))
+                self.stdout.write(self.style.SUCCESS(f'Successfully added student: '
+                                                     f'{product.name} {product.description}'))
             else:
-                self.stdout.write(self.style.WARNING(f'successfully added product: {product.name}'))
+                self.stdout.write(self.style.WARNING(f'Student already exists: '
+                                                     f'{product.name} {product.description}'))
