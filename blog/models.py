@@ -1,20 +1,23 @@
 from django.db import models
+from pygments.lexer import default
+
+# Create your models here.
+
 
 class Blog(models.Model):
-    header = models.CharField(max_length=300, verbose_name='заголовок')
-    content = models.TextField(verbose_name='содержимое', null=True, blank=True)
-    image = models.ImageField( verbose_name='изображение',null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_published = models.BooleanField(default=False)
-    number_of_views = models.BigIntegerField(verbose_name='количество просмотров',default=0)
-
+    title = models.CharField(max_length=250, verbose_name='название', help_text='Введите название')
+    content = models.TextField(verbose_name='содержимое', help_text='Введите содержимое')
+    image = models.ImageField(upload_to='blog_image/', blank=True, null=True, verbose_name='фото',
+                              help_text='Загрузити фотографию')
+    created_at = models.DateField(verbose_name='дата создания', help_text='Введите датe создания', blank=True,
+                                  null=True)
+    publication_sign = models.BooleanField(default=True)
+    count_of_views = models.PositiveIntegerField(verbose_name='Счетчик просмотров', default=0)
 
     def __str__(self):
-        return self.header
-
-
+        return f'{self.title}'
 
     class Meta:
-        verbose_name = 'блог'
-        verbose_name_plural = 'блоги'
-        ordering = ['header',]
+        verbose_name = 'статья'
+        verbose_name_plural = 'статьи'
+        ordering = ['title']
